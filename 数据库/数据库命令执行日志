@@ -1,0 +1,25 @@
+USE fapiao;
+DROP TABLE IF EXISTS log;
+--日志表
+CREATE TABLE log (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    operation_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    operation VARCHAR(255) NOT NULL,
+    ip_address VARCHAR(45) NOT NULL,
+    user VARCHAR(255) NOT NULL
+);
+--用户表
+USE fapiao;
+CREATE TABLE `user` (
+  `ID` INT NOT NULL AUTO_INCREMENT,
+  `username` VARCHAR(50) NOT NULL,
+  `password` VARCHAR(255) NOT NULL,
+  `register_date` DATE NOT NULL,
+  `email` VARCHAR(100) NOT NULL,
+  `bank_card_number` VARCHAR(20),
+  `bank_name` VARCHAR(100),
+  `real_name` VARCHAR(50),
+  `department_name` VARCHAR(100),
+  `2fa_key` VARCHAR(16),
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
