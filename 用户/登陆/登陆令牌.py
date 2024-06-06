@@ -23,3 +23,10 @@ def 验证令牌(token: str):
         return 载荷
     except jwt.exceptions.InvalidTokenError:
         return None
+
+# def Debug():
+#     令牌 = 生成访问令牌({"test":"test_user"})
+#     print(令牌)
+#     验证结果 = 验证令牌(令牌)
+#     print(验证结果)
+#Debug()
