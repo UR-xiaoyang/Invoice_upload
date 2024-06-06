@@ -23,3 +23,13 @@ CREATE TABLE `user` (
   `2fa_key` VARCHAR(16),
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+--发票表
+USE fapiao;
+CREATE TABLE `invoice` (
+  `ID` INT NOT NULL AUTO_INCREMENT,
+  `upload_user` VARCHAR(50) NOT NULL,
+  `is_used` TINYINT(1) NOT NULL DEFAULT 0,
+  `upload_time` DATETIME NOT NULL,
+  `file_name` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
