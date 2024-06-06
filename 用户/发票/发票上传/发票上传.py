@@ -1,13 +1,7 @@
-import os
 from datetime import datetime
 from pathlib import Path
-
-from fastapi import UploadFile
-
 from 数据库.日志.log表 import 记录日志
 from 数据库.联系数据库 import 连接数据库
-
-
 
 def 存储发票(上传文件, 用户名, IP):
     """
