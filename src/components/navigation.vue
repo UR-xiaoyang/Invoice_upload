@@ -48,17 +48,18 @@
           <a class="hover:text-gray-300" href="#">
             查看发票
           </a>
-          <a class="hover:text-gray-300" href="#">
+          <router-link class="hover:text-gray-300" to="/">
             上传文件
-          </a>
+          </router-link>
+
         </div>
         <div class="flex items-center gap-4">
-          <a class="hover:text-gray-300" href="#">
+          <router-link class="hover:text-gray-300" to="/sign_up">
             注册
-          </a>
-          <a class="hover:text-gray-300" href="#">
-            登录
-          </a>
+          </router-link>
+          <router-link class="hover:text-gray-300" to="/sign_in">
+            登陆
+          </router-link>
         </div>
       </div>
     </div>

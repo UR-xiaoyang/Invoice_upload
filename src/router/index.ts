@@ -1,23 +1,30 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import UploadInvoice from '../components/UploadInvoice.vue'
+import sign_up from '../components/sign_up.vue'
+import sign_in from '../components/sign_in.vue'
+// 路由页面
+const routes = [
+  {
+    // 上传页面（主页）
+    path: '/',
+    name: 'upload_invoice',
+    component: UploadInvoice
+  },
+  {
+    path: '/sign_up',
+    name: 'sign_up',
+    component: sign_up
+  },
+  {
+    path: '/sign_in',
+    name: 'sign_in',
+    component: sign_in
+  }
 
+]
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: HomeView
-    },
-    {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue')
-    }
-  ]
-})
+  routes
+});
 
 export default router
