@@ -751,3 +751,14 @@ video {
     padding-bottom: 5rem;
   }
 }
+.min-h-screen{
+  min-height: 88.4vh;
+}
+/* 在你的全局样式文件或组件的<style>标签内 */
+.bg-custom-black {
+  background-color: #333; /* 这是一个比纯黑（#000）稍浅的黑色，可以根据喜好调整 */
+}
+
+.bg-custom-black:hover {
+  background-color: #222; /* 鼠标悬停时的背景色，更深一点，以示区分 */
+}

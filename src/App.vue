@@ -1,14 +1,13 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import navigation from './components/navigation.vue'
-import Upload_invoice from './components/UploadInvoice.vue'
 import bottom from './components/bottom.vue'
 </script>
 
 <template>
-  <div class="flex flex-col">
+  <div id="app" class="flex flex-col">
     <navigation />
-    <Upload_invoice />
+    <router-view />
     <bottom />
   </div>
 </template>
