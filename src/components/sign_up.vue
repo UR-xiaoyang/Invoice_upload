@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { api } from '@/API/API_connect'; // 调整路径以匹配你的实际目录结构
-import type { 用户注册表单 } from '@/API/sign_up'; // 引入类型定义，路径根据实际情况调整
+import { ref, computed, onBeforeMount } from 'vue';
+import { api } from '@/API/API_connect';
+import type { 用户注册表单 } from '@/API/sign_up';
 
-// 定义响应式表单数据
 const formData = ref<用户注册表单>({
   用户名: '',
   密码: '',
+  确认密码: '', // 添加确认密码字段
   邮箱: '',
   银行卡号: '',
   开户行: '',
@@ -14,27 +14,52 @@ const formData = ref<用户注册表单>({
   部门名称: '',
 });
 
-// 处理注册逻辑
-async function handleRegister() {
-  try {
-    // 发起POST请求进行用户注册
-    const response = await api.post('/user/sign_up', formData.value); // 假设API_CONNECT已经设置了baseURL
-    console.log('注册成功:', response.data);
-    // 这里可以添加成功提示或页面跳转逻辑
-  } catch (error) {
-    // 记录错误信息
-    console.error('用户注册时发生错误:', error.message);
+// 验证密码是否一致
+const isPasswordMatch = (): boolean => {
+  console.log('密码:', formData.value.密码, '确认密码:', formData.value.确认密码);
+  return formData.value.密码 === formData.value.确认密码;
+};
 
-    // 根据错误响应细化处理逻辑
-    if (error.response && error.response.status === 400) {
-      console.error('提交的注册信息有误');
-      // 可以在此处显示错误提示给用户
-    }
+// 验证密码复杂度（包含数字和英文，长度至少6位）
+function isPasswordComplex(): boolean {
+  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+  return passwordRegex.test(formData.value.密码);
+}
+
+// 验证邮箱格式
+function isValidEmail(email: string): boolean {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+
+// 在注册前进行验证
+async function handleRegister() {
+  if (!isPasswordMatch()) {
+    alert('密码和确认密码不一致！');
+    return;
+  }
+
+  if (!isPasswordComplex()) {
+    alert('密码必须包含数字和英文，且长度至少为6位！');
+    return;
+  }
+
+  if (!isValidEmail(formData.value.邮箱)) {
+    alert('邮箱格式不正确！');
+    return;
+  }
+
+  try {
+    const response = await api.post('/user/sign_up', formData.value);
+    console.log('注册成功:', response.data);
+    alert('注册成功！');
+  } catch (error) {
+
+    console.error('用户注册时发生错误:', error.message);
+    alert('用户可能存在', error.message);
   }
 }
 </script>
-
-
 
 <template>
   <div class="min-h-screen flex-1 flex flex-col items-center justify-center gap-8 bg-gray-950 text-white py-12 md:py-16 lg:py-20 relative overflow-hidden">
@@ -55,6 +80,7 @@ async function handleRegister() {
             用户名
           </label>
           <input
+            v-model="formData.用户名"
             class="color-changing-input flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 color-changing-input"
             id="username"
             placeholder="您想注册的用户名"
@@ -68,6 +94,7 @@ async function handleRegister() {
             邮箱
           </label>
           <input
+            v-model="formData.邮箱"
             class="color-changing-input flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             id="email"
             placeholder="输入您的邮箱"
@@ -88,6 +115,7 @@ async function handleRegister() {
             id="password"
             placeholder="输入您的密码"
             type="password"
+            v-model="formData.密码"
           />
         </div>
         <div class="space-y-2">
@@ -102,6 +130,7 @@ async function handleRegister() {
             id="confirm-password"
             placeholder="再次输入您的密码"
             type="password"
+            v-model="formData.确认密码"
           />
         </div>
       </div>
@@ -117,6 +146,7 @@ async function handleRegister() {
             class="color-changing-input flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             id="bank-card-id"
             placeholder="卡号请不要空格"
+            v-model="formData.银行卡号"
           />
         </div>
         <div class="space-y-2">
@@ -130,6 +160,7 @@ async function handleRegister() {
             class="color-changing-input flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             id="bank-name"
             placeholder="请输入您的具体"
+            v-model="formData.开户行"
           />
         </div>
       </div>
@@ -144,7 +175,8 @@ async function handleRegister() {
           <input
             class="color-changing-input flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             id="real-name"
-            placeholder="报销部门"
+            placeholder="真实姓名"
+            v-model="formData.真实姓名"
           />
         </div>
         <div class="space-y-2">
@@ -158,6 +190,7 @@ async function handleRegister() {
             class="color-changing-input flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             id="department"
             placeholder="报销单抬头"
+            v-model="formData.部门名称"
           />
         </div>
       </div>
