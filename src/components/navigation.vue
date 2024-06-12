@@ -53,13 +53,20 @@
           </router-link>
 
         </div>
-        <div class="flex items-center gap-4">
+        <div v-if="!isLoggedIn" class="flex items-center gap-4">
           <router-link class="hover:text-gray-300" to="/sign_up">
             注册
           </router-link>
           <router-link class="hover:text-gray-300" to="/sign_in">
             登陆
           </router-link>
+        </div>
+
+        <div v-else class="flex items-center gap-4">
+          <span class="hover:text-gray-300">
+            欢迎 {{ username }}
+          </span>
+          <button @click="logout" class="text-gray-300 hover:text-red-500">登出</button>
         </div>
       </div>
     </div>
@@ -68,23 +75,48 @@
 </template>
 
 <script>
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, inject } from 'vue';
 import DropdownMenu from './DropdownMenu.vue';
-
+let isLoggedIn = ref(false);
+const username = ref('');
 // 组件名和变量名保持英文，但在注释中使用中文描述
 export default defineComponent({
   components: {
     DropdownMenu,
   },
   setup() {
+
     const dropdownMenuVisible = ref(false);
+    const savedLoginInfo = localStorage.getItem("loginInfo");
+    const parsedInfo = JSON.parse(savedLoginInfo);
+    if(savedLoginInfo){
+      username.value = parsedInfo.username;
+      isLoggedIn.value = parsedInfo.isLoggedIn;
+    }
+
+    // console.log(savedLoginInfo)
     function toggleDropdown() {
       dropdownMenuVisible.value = !dropdownMenuVisible.value;
     }
+    // 登出
+    const logout = () => {
+      isLoggedIn.value = false;
+      username.value = '';
+      localStorage.removeItem("loginInfo");
+      console.log(isLoggedIn.value)
+      // 登出后跳转到登录页面
+      window.location.href = '/sign_in';
+    };
     return {
       dropdownMenuVisible,
       toggleDropdown,
+      isLoggedIn,
+      username,
+      logout
     };
+
   },
+
 });
+
 </script>
