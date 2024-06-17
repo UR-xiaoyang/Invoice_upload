@@ -4,7 +4,7 @@ from 用户.注册.注册验证 import 注册验证
 
 注册路由 = APIRouter()
 
-@注册路由.post("/注册")
+@注册路由.post("/sign_up")
 async def 注册API(请求: Request, 表单: 注册表单):
     IP = 请求.client.host
 
