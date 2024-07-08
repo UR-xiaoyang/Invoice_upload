@@ -25,8 +25,9 @@ def 验证令牌(token: str):
         return None
 
 # def Debug():
-#     令牌 = 生成访问令牌({"test":"test_user"})
-#     print(令牌)
+# #     令牌 = 生成访问令牌({"test":"test_user"})
+# #     print(令牌)
+#     令牌 = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJEZWJ1ZyIsImV4cCI6MTcxODYwNTY4N30.snunvCNe8jMyYDT9yRvcSeXXhhGP3g2is4hPlNxkY2k"
 #     验证结果 = 验证令牌(令牌)
-#     print(验证结果)
-#Debug()
+#     print(验证结果['sub'])
+# Debug()
