@@ -16,7 +16,7 @@ const formData = ref<用户注册表单>({
 
 // 验证密码是否一致
 const isPasswordMatch = (): boolean => {
-  console.log('密码:', formData.value.密码, '确认密码:', formData.value.确认密码);
+
   return formData.value.密码 === formData.value.确认密码;
 };
 
