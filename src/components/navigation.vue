@@ -1,122 +1,123 @@
 <!--导航栏-->
 <template>
-    <header id = "导航栏" class="bg-gray-950 text-white py-4 px-6 flex items-center justify-between">
-        <div class="flex items-center gap-4 w-full">
-      <a href="#">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="h-6 w-6"
-        >
-          <path d="m8 3 4 8 5-5 5 15H2L8 3z"></path>
-        </svg>
-        <span class="sr-only">Acme Inc</span>
-      </a>
-      <div class="relative md:hidden w-full">
-        <button @click="toggleDropdown" class="inline-flex items-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 rounded-full w-full justify-start">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="h-6 w-6 mr-2"
-          >
-            <line x1="4" x2="20" y1="12" y2="12"></line>
-            <line x1="4" x2="20" y1="6" y2="6"></line>
-            <line x1="4" x2="20" y1="18" y2="18"></line>
-          </svg>
-          <span>Menu</span>
-        </button>
-        <DropdownMenu :isVisible="dropdownMenuVisible" />
-
-
-      </div>
-      <div class="hidden md:flex items-center gap-4 w-full justify-between">
-        <div class="flex items-center gap-4">
-          <a class="hover:text-gray-300" href="#">
-            查看发票
+  <header id="导航栏" class="bg-gray-950 text-white py-4 px-6 flex items-center justify-between">
+      <div class="flex items-center gap-4 w-full">
+          <a href="#">
+              <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="h-6 w-6"
+              >
+                  <path d="m8 3 4 8 5-5 5 15H2L8 3z"></path>
+              </svg>
+              <span class="sr-only">Acme Inc</span>
           </a>
-          <router-link class="hover:text-gray-300" to="/">
-            上传文件
-          </router-link>
-
-        </div>
-        <div v-if="!isLoggedIn" class="flex items-center gap-4">
-          <router-link class="hover:text-gray-300" to="/sign_up">
-            注册
-          </router-link>
-          <router-link class="hover:text-gray-300" to="/sign_in">
-            登陆
-          </router-link>
-        </div>
-
-        <div v-else class="flex items-center gap-4">
-          <span class="hover:text-gray-300">
-            欢迎 {{ username }}
-          </span>
-          <button @click="logout" class="text-gray-300 hover:text-red-500">登出</button>
-        </div>
+          <div class="relative md:hidden w-full">
+              <button @click="toggleDropdown" class="inline-flex items-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 rounded-full w-full justify-start">
+                  <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      class="h-6 w-6 mr-2"
+                  >
+                      <line x1="4" x2="20" y1="12" y2="12"></line>
+                      <line x1="4" x2="20" y1="6" y2="6"></line>
+                      <line x1="4" x2="20" y1="18" y2="18"></line>
+                  </svg>
+                  <span>Menu</span>
+              </button>
+              <DropdownMenu :isVisible="dropdownMenuVisible" />
+          </div>
+          <div class="hidden md:flex items-center gap-4 w-full justify-between">
+              <div class="flex items-center gap-4">
+                  <a class="hover:text-gray-300" href="#">
+                      查看发票
+                  </a>
+                  <router-link class="hover:text-gray-300" to="/">
+                      上传文件
+                  </router-link>
+              </div>
+              <div v-if="!isLoggedIn" class="flex items-center gap-4">
+                  <router-link class="hover:text-gray-300" to="/sign_up">
+                      注册
+                  </router-link>
+                  <router-link class="hover:text-gray-300" to="/sign_in">
+                      登陆
+                  </router-link>
+              </div>
+              <div v-else class="flex items-center gap-4">
+                  <span class="hover:text-gray-300">
+                      欢迎 {{ username }}
+                  </span>
+                  <button @click="logout" class="text-gray-300 hover:text-red-500">登出</button>
+              </div>
+          </div>
       </div>
-    </div>
-    </header>
-
+  </header>
 </template>
 
 <script>
-import { defineComponent, ref, inject } from 'vue';
+import { defineComponent, ref, onMounted } from 'vue';
+import Cookies from 'js-cookie';
 import DropdownMenu from './DropdownMenu.vue';
-let isLoggedIn = ref(false);
-const username = ref('');
-// 组件名和变量名保持英文，但在注释中使用中文描述
+
 export default defineComponent({
-  components: {
-    DropdownMenu,
-  },
-  setup() {
+components: {
+  DropdownMenu,
+},
+setup() {
+  const dropdownMenuVisible = ref(false);
+  const isLoggedIn = ref(false);
+  const username = ref('');
 
-    const dropdownMenuVisible = ref(false);
+  onMounted(() => {
+    const token = Cookies.get('token');
     const savedLoginInfo = localStorage.getItem("loginInfo");
-    const parsedInfo = JSON.parse(savedLoginInfo);
-    if(savedLoginInfo){
-      username.value = parsedInfo.username;
-      isLoggedIn.value = parsedInfo.isLoggedIn;
-    }
 
-    // console.log(savedLoginInfo)
-    function toggleDropdown() {
-      dropdownMenuVisible.value = !dropdownMenuVisible.value;
-    }
-    // 登出
-    const logout = () => {
-      isLoggedIn.value = false;
-      username.value = '';
+    if (token && savedLoginInfo) {
+      const parsedInfo = JSON.parse(savedLoginInfo);
+      if (parsedInfo) {
+        username.value = parsedInfo.username;
+        isLoggedIn.value = true;
+      }
+    } else {
+      // 清除本地存储中的登录信息
       localStorage.removeItem("loginInfo");
-      console.log(isLoggedIn.value)
-      // 登出后跳转到登录页面
-      window.location.href = '/sign_in';
-    };
-    return {
-      dropdownMenuVisible,
-      toggleDropdown,
-      isLoggedIn,
-      username,
-      logout
-    };
+    }
+  });
 
-  },
+  function toggleDropdown() {
+    dropdownMenuVisible.value = !dropdownMenuVisible.value;
+  }
 
+  const logout = () => {
+    isLoggedIn.value = false;
+    username.value = '';
+    localStorage.removeItem("loginInfo");
+    Cookies.remove('token');
+    window.location.href = '/sign_in';
+  };
+
+  return {
+    dropdownMenuVisible,
+    toggleDropdown,
+    isLoggedIn,
+    username,
+    logout
+  };
+},
 });
-
 </script>
