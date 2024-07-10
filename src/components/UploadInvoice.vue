@@ -136,29 +136,11 @@ const upload_invoice = async () => {
           </svg>
         </button>
       </div>
-      <button @click="upload_invoice" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-opacity-75">
-        上传发票
-      </button>
     </div>
-
-    <div v-else class="w-full max-w-md border-2 border-gray-700 border-dashed rounded-md p-6 flex flex-col items-center justify-center space-y-4 cursor-pointer transition-colors hover:border-gray-500">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        class="h-5 w-5"
-      >
-        <path d="M18 6 6 18"></path>
-        <path d="m6 6 12 12"></path>
-      </svg>
-      <p class="text-gray-400">暂无文件，拖拽或点击选择文件</p>
-    </div>
+    <!-- 上传发票按钮 -->
+    <button v-if="文件上传列表.length > 0" @click="upload_invoice" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-opacity-75 mt-4">
+      上传发票
+    </button>
   </div>
 </template>
 
