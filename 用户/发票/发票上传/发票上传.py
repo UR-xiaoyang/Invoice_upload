@@ -13,7 +13,7 @@ def 存储发票(上传文件, 用户名, IP):
         上传目录.mkdir(parents=True, exist_ok=True)
 
         # 生成一个唯一的文件名
-        文件名 = f"{用户名}_{datetime.now().strftime('%Y%m%d%H%M%S')}{Path(上传文件.filename).suffix}"
+        文件名 = f"{用户名}_{datetime.now().strftime('%Y%m%d%H%M%S%f')}{Path(上传文件.filename).suffix}"
         文件路径 = 上传目录 / 文件名
 
         # 保存文件到服务器
