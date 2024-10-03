@@ -1,0 +1,137 @@
+altgraph==0.17.4
+annotated-types @ file:///croot/annotated-types_1709542908624/work
+anyio @ file:///croot/anyio_1706220167567/work
+astor==0.8.1
+asttokens==2.4.1
+attrs==24.2.0
+backcall==0.2.0
+bcrypt @ file:///work/ci_py311/bcrypt_1676825144644/work
+beautifulsoup4==4.12.3
+bleach==6.1.0
+cachetools==5.5.0
+certifi==2024.8.30
+cffi @ file:///croot/cffi_1714483155441/work
+charset-normalizer==3.3.2
+ci-info==0.3.0
+click @ file:///croot/click_1698129812380/work
+configobj==5.0.9
+configparser==7.1.0
+contourpy==1.3.0
+cryptography @ file:///croot/cryptography_1714660666131/work
+cycler==0.12.1
+Cython==3.0.11
+decorator==5.1.1
+defusedxml==0.7.1
+docopt==0.6.2
+et-xmlfile==1.1.0
+etelemetry==0.3.1
+executing==2.1.0
+fastapi @ file:///croot/fastapi_1693295406697/work
+fastjsonschema==2.20.0
+filelock==3.16.1
+fire==0.6.0
+fitz==0.0.1.dev2
+fonttools==4.54.1
+h11 @ file:///croot/h11_1706652277403/work
+httpcore==1.0.5
+httplib2==0.22.0
+httpx==0.27.2
+idna @ file:///croot/idna_1714398848350/work
+imageio==2.35.1
+imgaug==0.4.0
+ipython==8.12.3
+isodate==0.6.1
+jedi==0.19.1
+Jinja2==3.1.4
+jose==1.0.0
+jsonschema==4.23.0
+jsonschema-specifications==2023.12.1
+jupyter_client==8.6.2
+jupyter_core==5.7.2
+jupyterlab_pygments==0.3.0
+kiwisolver==1.4.7
+lazy_loader==0.4
+lmdb==1.5.1
+looseversion==1.3.0
+lxml==5.3.0
+MarkupSafe==2.1.5
+matplotlib==3.9.2
+matplotlib-inline==0.1.7
+mistune==3.0.2
+nbclient==0.10.0
+nbconvert==7.16.4
+nbformat==5.10.4
+networkx==3.3
+nibabel==5.2.1
+nipype==1.8.6
+numpy==1.26.4
+opencv-contrib-python==4.10.0.84
+opencv-python==4.10.0.84
+openpyxl==3.1.5
+opt-einsum==3.3.0
+packaging==24.1
+paddleocr==2.8.1
+paddlepaddle-gpu==2.6.2
+pandas==2.2.3
+pandocfilters==1.5.1
+parso==0.8.4
+pathlib==1.0.1
+pexpect==4.9.0
+pickleshare==0.7.5
+pillow==10.4.0
+pipreqs==0.5.0
+platformdirs==4.2.2
+prompt_toolkit==3.0.47
+protobuf==5.28.2
+prov==2.0.1
+ptyprocess==0.7.0
+pure_eval==0.2.3
+pyclipper==1.3.0.post5
+pycparser @ file:///tmp/build/80754af9/pycparser_1636541352034/work
+pydantic @ file:///croot/pydantic_1709577974639/work
+pydantic_core @ file:///croot/pydantic-core_1709573961665/work
+pydot==3.0.1
+Pygments==2.18.0
+pyinstaller==6.10.0
+pyinstaller-hooks-contrib==2024.8
+PyJWT @ file:///croot/pyjwt_1715094751094/work
+PyMuPDF==1.24.10
+PyMuPDFb==1.24.10
+PyMySQL @ file:///work/ci_py311/pymysql_1676845339962/work
+pyparsing==3.1.4
+python-dateutil==2.9.0.post0
+python-docx==1.1.2
+python-multipart==0.0.9
+pytz==2024.2
+pyxnat==1.6.2
+PyYAML==6.0.2
+pyzmq==26.2.0
+RapidFuzz==3.10.0
+rdflib==6.3.2
+referencing==0.35.1
+requests==2.32.3
+rpds-py==0.20.0
+scikit-image==0.24.0
+scipy==1.14.1
+shapely==2.0.6
+simplejson==3.19.3
+six @ file:///tmp/build/80754af9/six_1644875935023/work
+sniffio @ file:///croot/sniffio_1705431295498/work
+soupsieve==2.6
+stack-data==0.6.3
+starlette==0.37.2
+termcolor==2.4.0
+tifffile==2024.9.20
+tinycss2==1.3.0
+tornado==6.4.1
+tqdm==4.66.5
+traitlets==5.14.3
+traits==6.3.2
+typing_extensions @ file:///croot/typing_extensions_1715268824938/work
+tzdata==2024.2
+urllib3==2.2.2
+uvicorn @ file:///work/ci_py311_2/uvicorn-split_1679340461072/work
+wcwidth==0.2.13
+webencodings==0.5.1
+yarg==0.1.9
+zhipuai==2.1.5.20230904
