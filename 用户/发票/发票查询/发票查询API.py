@@ -1,15 +1,18 @@
 # 发票查询API
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, Depends
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
 from 用户.发票.发票查询.查询表单 import 发票查询表单
 from 用户.发票.发票查询.用户发票查询 import 发票查询
 from 用户.登陆.登陆令牌 import 验证令牌
 
 发票查询路由器 = APIRouter()
+security = HTTPBearer()
 
-@ 发票查询路由器.post("/发票查询")
-async def 发票查询API(请求: Request, 表单: 发票查询表单):
-    令牌 = 验证令牌(表单.token)
+@ 发票查询路由器.post("/Invoice_Inquiry")
+async def 发票查询API(请求: Request, 表单: 发票查询表单, credentials: HTTPAuthorizationCredentials = Depends(security)):
+    token = credentials.credentials
+    令牌 = 验证令牌(token)
     if 令牌:
         IP = 请求.client.host
         查询数据 = 发票查询(表单.用户, 表单.页码, IP)
