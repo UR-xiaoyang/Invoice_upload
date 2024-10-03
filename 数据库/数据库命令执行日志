@@ -33,3 +33,16 @@ CREATE TABLE `invoice` (
   `file_name` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+--发票信息表
+CREATE TABLE Invoice_Info (
+    数据ID INT AUTO_INCREMENT PRIMARY KEY,
+    发票ID INT,
+    发票号码 VARCHAR(255),
+    发票代码 VARCHAR(255),
+    价税合计 VARCHAR(255),
+    效验码 VARCHAR(255),
+    发票类型 VARCHAR(255),
+    开票日期 VARCHAR(255),
+    交易内容 TEXT
+);
+
