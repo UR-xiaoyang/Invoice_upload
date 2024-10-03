@@ -5,6 +5,8 @@ import pymysql
 
 from 数据库.数据库配置 import Config
 
+# 说明：调用"连接数据库()"用于连接数据库，返回 连接，光标
+# 光标是用来执行命令的
 def 连接数据库():
     # 创建连接
     数据库连接请求 = pymysql.connect(
@@ -22,6 +24,7 @@ def 连接数据库():
     # else:
     #     print("数据库连接失败,请检查配置")
     return 数据库连接请求,cursor
+
 def 关闭数据库(数据库连接请求,cursor):
     cursor.close()
     数据库连接请求.close()
