@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import UploadInvoice from '../components/UploadInvoice.vue'
 import sign_up from '../components/sign_up.vue'
 import sign_in from '../components/sign_in.vue'
+import find_Invoice from '../components/findInvoice.vue'
 // 路由页面
 const routes = [
   {
@@ -19,6 +20,11 @@ const routes = [
     path: '/sign_in',
     name: 'sign_in',
     component: sign_in
+  },
+  {
+    path: '/find_Invoice' ,
+    name: 'find_Invoice' ,
+    component: find_Invoice
   }
 
 ]
