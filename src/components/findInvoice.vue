@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { api } from '@/API/API_connect';
 import { onMounted, ref } from 'vue';
+import { aS } from 'vitest/dist/reporters-yx5ZTtEV'
 
 // 从 Cookie 中获取 token 的函数
 const getTokenFromCookie = (): string | null => {
@@ -85,6 +86,37 @@ onMounted(async () => {
     console.log(e);
   }
 });
+
+// OCR识别按钮API
+const OCR = async (invoiceId: number) => {
+  try {
+    const token = getTokenFromCookie();
+    if (!token) {
+      throw new Error("Token没有发现");
+    }
+
+    // 发起 POST 请求，将发票ID发送给后端
+    const response = await api.post('/ocr/OCR_server', {
+      发票ID: invoiceId, // 使用 invoiceId 作为字段名称，而不是发票ID
+    }, {
+      headers: {
+        Authorization: `Bearer ${token}`, // 将 token 添加到请求头中
+        'Content-Type': 'application/json',
+      },
+    });
+
+    // 弹窗提示
+    if (response.data.status === 'success') {
+      window.alert(`OCR处理成功：发票ID ${response.data.发票ID}`);
+    } else {
+      window.alert(`OCR处理失败：${response.data.message}`);
+    }
+  } catch (error) {
+    console.error('OCR 处理出错：', error);
+    window.alert('OCR 处理时发生错误。');
+  }
+};
+
 </script>
 
 <template>
@@ -133,7 +165,7 @@ onMounted(async () => {
           <td>{{ invoice.date }}</td>
           <td>
             <!-- 只有当发票数据为 null 时显示 OCR 识别按钮 -->
-            <button v-if="invoice.number === null" class="ocr-button">OCR 识别</button>
+            <button v-if="invoice.number === null" class="ocr-button" @click="OCR(invoice.id)">OCR 识别</button>
             <button class="delete-button">删除</button>
           </td>
         </tr>
