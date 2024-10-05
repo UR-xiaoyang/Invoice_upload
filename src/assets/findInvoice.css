@@ -1,0 +1,157 @@
+/* 基本页面布局 */
+.container {
+    min-height: 100vh;
+    padding: 20px;
+    background-color: #1f2937; /* 背景深灰色 */
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+/* 标题和搜索框 */
+.header {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 1200px;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+.title {
+    font-size: 2.2rem;
+    font-weight: bold;
+    background: linear-gradient(to right, #3b82f6, #9333ea); /* 蓝紫渐变 */
+    -webkit-background-clip: text;
+    color: transparent;
+    white-space: nowrap; /* 强制文字一行显示 */
+    margin-bottom: 20px;
+}
+
+.search-area {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+}
+
+.search-input {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #374151; /* 深灰边框 */
+    background-color: #111827; /* 深背景 */
+    color: white;
+    width: 300px;
+}
+
+.search-input::placeholder {
+    color: #6b7280; /* 灰色占位符 */
+}
+
+.search-button {
+    padding: 10px 20px;
+    background-color: #111827; /* 深色按钮背景 */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.search-button:hover {
+    background-color: #374151; /* 悬停时变亮 */
+}
+
+/* 分页功能美化 */
+.pagination {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.pagination-button {
+    background-color: #111827; /* 按钮背景 */
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.pagination-button:hover {
+    background-color: #374151; /* 悬停时变亮 */
+}
+
+.page-info {
+    color: #9ca3af; /* 灰色文本 */
+}
+
+/* 发票列表表格 */
+.invoice-list {
+    width: 100%;
+    max-width: 1200px;
+    margin-top: 20px;
+    border-radius: 8px;
+    overflow: hidden; /* 去除表格的溢出部分 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 添加阴影效果 */
+}
+
+.invoice-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.invoice-table th,
+.invoice-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #374151; /* 行之间的分隔线 */
+}
+
+.invoice-table thead {
+    background-color: #374151; /* 表头背景 */
+    color: #d1d5db; /* 浅灰色文字 */
+    text-transform: uppercase; /* 全部大写 */
+}
+
+.invoice-table tbody tr {
+    background-color: #1f2937; /* 行背景色 */
+    transition: background-color 0.3s;
+}
+
+.invoice-table tbody tr:hover {
+    background-color: #374151; /* 悬停时背景色 */
+}
+
+/* 美化 OCR 和删除按钮 */
+.ocr-button,
+.delete-button {
+    padding: 5px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    color: white;
+    font-size: 0.9rem;
+    transition: background-color 0.3s;
+}
+
+.ocr-button {
+    background-color: #3b82f6; /* 蓝色背景 */
+    margin-right: 10px; /* 增加按钮之间的间距 */
+}
+
+.ocr-button:hover {
+    background-color: #2563eb; /* 悬停时变深 */
+}
+
+.delete-button {
+    background-color: #ef4444; /* 红色背景 */
+}
+
+.delete-button:hover {
+    background-color: #dc2626; /* 悬停时变深 */
+}
