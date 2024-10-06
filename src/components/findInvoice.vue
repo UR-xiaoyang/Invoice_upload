@@ -2,6 +2,7 @@
 import { api } from '@/API/API_connect';
 import { onMounted, ref } from 'vue';
 import { aS } from 'vitest/dist/reporters-yx5ZTtEV'
+import { it } from 'vitest'
 
 // 从 Cookie 中获取 token 的函数
 const getTokenFromCookie = (): string | null => {
@@ -69,6 +70,7 @@ const parseInvoiceData = (data: any[]) => {
         type: item[1][6], // 发票类型
         amount: item[1][4], // 金额
         date: item[1][7], // 日期
+        content: item[1][8], // 内容
       };
     }
   });
@@ -117,6 +119,8 @@ const OCR = async (invoiceId: number) => {
   }
 };
 
+
+
 </script>
 
 <template>
@@ -132,12 +136,7 @@ const OCR = async (invoiceId: number) => {
           type="text"
         />
         <button class="search-button">查询</button>
-        <!-- 分页功能 -->
-        <div class="pagination">
-          <button class="pagination-button">上一页</button>
-          <span class="page-info">第 1 页，共 10 页</span>
-          <button class="pagination-button">下一页</button>
-        </div>
+
       </div>
     </div>
 
@@ -152,6 +151,7 @@ const OCR = async (invoiceId: number) => {
           <th>发票类型</th>
           <th>金额</th>
           <th>日期</th>
+          <th>内容</th>
           <th>操作</th>
         </tr>
         </thead>
@@ -163,6 +163,7 @@ const OCR = async (invoiceId: number) => {
           <td>{{ invoice.type }}</td>
           <td>{{ invoice.amount }}</td>
           <td>{{ invoice.date }}</td>
+          <td>{{ invoice.content }}</td>
           <td>
             <!-- 只有当发票数据为 null 时显示 OCR 识别按钮 -->
             <button v-if="invoice.number === null" class="ocr-button" @click="OCR(invoice.id)">OCR 识别</button>
