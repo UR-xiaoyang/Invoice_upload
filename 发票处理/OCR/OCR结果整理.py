@@ -38,8 +38,12 @@ class Arrange_invoice:
         result['效验码'] = result['效验码'] or None
         result['发票类型'] = '电子发票' if result['发票代码'] == '电子发票' else '增值税发票'
 
-        # 查找交易内容（包含多个 * 的行）
-        result['交易内容'] = next((line for line in txt if isinstance(line, str) and line.count('*') > 1), '')
+        # 查找交易内容（包含多个 * 的行），并且不能有数字
+        result['交易内容'] = next(
+            (line for line in txt if isinstance(line, str) and '*' in line and line.count('*') > 1 and not any(
+                char.isdigit() for char in line)),
+            ''
+        )
 
         # 返回结果列表
         return [result['发票号码'], result['发票代码'], result['价税合计'],
