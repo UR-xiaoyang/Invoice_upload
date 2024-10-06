@@ -1,10 +1,10 @@
-from fastapi import FastAPI, Request, Depends, HTTPException, APIRouter
+from fastapi import Request, Depends, HTTPException, APIRouter
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
-from 发票处理.OCR处理表单 import OCR表单
+from 发票处理.OCR.OCR处理表单 import OCR表单
 from 用户.登陆.登陆令牌 import 验证令牌
 
-from 发票处理.发票处理 import 发票处理
+from 发票处理.OCR.发票处理 import 发票处理
 
 OCR路由 = APIRouter()
 security = HTTPBearer()

@@ -6,7 +6,7 @@ from 用户.发票.发票上传.发票上传API import 发票上传路由
 from 用户.发票.发票查询.发票查询API import 发票查询路由器
 from 用户.注册.注册API import 注册路由
 from 用户.登陆.登陆API import 登陆路由
-from 发票处理.OCR_API import OCR路由
+from 发票处理.OCR.OCR_API import OCR路由
 
 app = FastAPI()
 
