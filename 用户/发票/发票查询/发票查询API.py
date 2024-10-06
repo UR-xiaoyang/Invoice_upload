@@ -11,13 +11,13 @@ from 用户.登陆.登陆令牌 import 验证令牌
 security = HTTPBearer()
 
 @ 发票查询路由器.post("/Invoice_Inquiry")
-async def 发票查询API(请求: Request, 表单: 发票查询表单, credentials: HTTPAuthorizationCredentials = Depends(security)):
+async def 发票查询API(请求: Request, credentials: HTTPAuthorizationCredentials = Depends(security)):
     token = credentials.credentials
     令牌 = 验证令牌(token)
     if 令牌:
-        
+
         IP = 请求.client.host
-        查询数据 = 发票查询(令牌['sub'], 表单.页码, IP)
+        查询数据 = 发票查询(令牌['sub'], IP)
         发票数据 = 发票数据查询.获取数据(查询数据)
         if 发票数据:
             return {"code": 200, "msg": "查询成功", "data": 发票数据}
