@@ -1,7 +1,7 @@
 from 数据库.日志.log表 import 记录日志
 from 数据库.联系数据库 import 连接数据库, 关闭数据库
-from 发票处理.OCR import OCR_PaddleOCR
-from 发票处理.OCR结果整理 import Arrange_invoice
+from 发票处理.OCR.OCR import OCR_PaddleOCR
+from 发票处理.OCR.OCR结果整理 import Arrange_invoice
 class 发票处理:
 
     def __init__(self, IP, 操作人):
