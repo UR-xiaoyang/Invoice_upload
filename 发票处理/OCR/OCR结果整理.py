@@ -1,50 +1,61 @@
-import re
-from typing import List, Dict
 
 class Arrange_invoice:
     @staticmethod
-    def get_invoice_info(txt: List[str]) -> List[str]:
-        # 初始化结果字典
-        result = {
-            '发票号码': '',
-            '发票代码': '',
-            '价税合计': '',
-            '效验码': '',
-            '发票类型': '',
-            '开票日期': '',
-            '交易内容': ''
-        }
+    def get_invoice_info(txt):
+        发票号码 = ""
+        发票代码 = ""
+        价税合计 = ""
+        效验码 = ""
+        发票类型 = ""
+        开票日期 = ""
+        交易内容 = ""
+        for i in range(len(txt)):
+            try:
+                if "发票代码" in txt[i]:
+                    发票代码 = txt[i].split("：")[1]
+                if "发票号码" in txt[i]:
+                    发票号码 = txt[i].split("：")[1]
+                if "开票日期" in txt[i]:
+                    开票日期 = txt[i].split("：")[1]
+                if "校验码" in txt[i]:
+                    效验码 = txt[i].split("：")[1]
+                if txt[i].count("*") == 2:
+                    交易内容 = txt[i]
+                if "小写" in txt[i]:
+                    价税合计 = txt[i][5:]
 
-        # 定义正则表达式模式
-        patterns = {
-            '发票号码': r'发票号码[:：]\s*(\S+)',
-            '发票代码': r'发票代码[:：]\s*(\S+)',
-            '开票日期': r'开票日期[:：]\s*(\S+)',
-            '校验码': r'校验码[:：]\s*(\S+)',
-            '价税合计': r'[（(]小写[)）]\s*[:：￥¥]\s*(\S+)'
-        }
-
-        # 合并所有文本行
-        full_text = ' '.join(line if isinstance(line, str) else line[0] for line in txt)
-
-        # 使用正则表达式提取信息
-        for key, pattern in patterns.items():
-            match = re.search(pattern, full_text)
-            if match:
-                result[key if key != '校验码' else '效验码'] = match.group(1)
-
-        # 处理特殊情况
-        result['发票代码'] = result['发票代码'] or '电子发票'
-        result['效验码'] = result['效验码'] or None
-        result['发票类型'] = '电子发票' if result['发票代码'] == '电子发票' else '增值税发票'
-
-        # 查找交易内容（包含多个 * 的行），并且不能有数字
-        result['交易内容'] = next(
-            (line for line in txt if isinstance(line, str) and '*' in line and line.count('*') > 1 and not any(
-                char.isdigit() for char in line)),
-            ''
-        )
-
-        # 返回结果列表
-        return [result['发票号码'], result['发票代码'], result['价税合计'],
-                result['效验码'], result['发票类型'], result['开票日期'], result['交易内容']]
+            except IndexError:
+                if "发票代码" in txt[i] and 发票代码 == "":
+                    发票代码 = txt[i + 1]
+                if "发票号码" in txt[i] and 发票号码 == "":
+                    发票号码 = txt[i + 1]
+                if "开票日期" in txt[i] and 开票日期 == "":
+                    开票日期 = txt[i + 1]
+                if "校验码" in txt[i] and 效验码 == "":
+                    效验码 = txt[i + 1]
+                if "小写" in txt[i] and 价税合计 == "":
+                    价税合计 = txt[i + 1][1:]
+        for i in range(len(txt)):
+            if "发票代码" in txt[i] and 发票代码 == "":
+                发票代码 = txt[i + 1]
+            if "发票号码" in txt[i] and 发票号码 == "":
+                发票号码 = txt[i + 1]
+            if "开票日期" in txt[i] and 开票日期 == "":
+                开票日期 = txt[i + 1]
+            if "校验码" in txt[i][0] and 效验码 == "":
+                效验码 = txt[i + 1]
+            if "小写" in txt[i] and 价税合计 == "":
+                价税合计 = txt[i + 1][1:]
+        if 发票代码 == "":
+            发票代码 = "电子发票"
+        if 效验码 == "":
+            效验码 = None
+        if 发票类型 == "" and 发票代码 == "电子发票":
+            发票类型 = "电子发票"
+        elif 发票代码 != "电子发票":
+            发票类型 = "增值税发票"
+        结果 = [发票号码, 发票代码, str(价税合计), 效验码, 发票类型, 开票日期, 交易内容]
+        for i in range(len(结果)):
+            if "：" in str(结果[i]):
+                结果[i] = 结果[i].replace("：", "")
+        return 结果
