@@ -1,9 +1,10 @@
-import multiprocessing
+
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 import uvicorn
 
+from 初始化 import 初始化
 # 导入各个模块路由
 from 发票处理.删除.删除发票API import 删除发票路由
 from 发票处理.发票下载.下载API import 下载API
@@ -13,6 +14,8 @@ from 用户.注册.注册API import 注册路由
 from 用户.登陆.登陆API import 登陆路由
 from 发票处理.OCR.OCR_API import OCR路由
 
+# 初始化
+配置 = 初始化()
 app = FastAPI()
 
 # 设置允许所有来源的CORS配置
@@ -43,14 +46,6 @@ async def preflight_handler(request: Request, rest_of_path: str):
     return response
 
 if __name__ == "__main__":
-    # 获取系统的CPU核心数
-    cpu_cores = multiprocessing.cpu_count()
-
-    # 动态计算合适的workers数量，通常是2到4倍CPU核心数
-    # workers_count = cpu_cores * 2
-    workers_count = 10
-
-    print(f"启动应用，使用 {workers_count} 个 workers...")
 
     # 启动 uvicorn，动态分配 workers 数量
-    uvicorn.run('main:app', host="0.0.0.0", port=8000, workers=workers_count)
+    uvicorn.run('main:app', host=配置["host"], port=配置["port"], workers=配置["workers"])
