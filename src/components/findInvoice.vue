@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { api } from '@/API/API_connect';
 import { onMounted, ref } from 'vue';
+import * as XLSX from 'xlsx';
+
 
 // 从 Cookie 中获取 token 的函数
 const getTokenFromCookie = (): string | null => {
@@ -9,7 +11,7 @@ const getTokenFromCookie = (): string | null => {
   const cookiesArray = decodedCookie.split(';');
 
   for (let i = 0; i < cookiesArray.length; i++) {
-    let cookie = cookiesArray[i].trim();
+    const cookie = cookiesArray[i].trim();
     if (cookie.indexOf(name) === 0) {
       return cookie.substring(name.length, cookie.length);
     }
@@ -26,7 +28,6 @@ const searchInvoices = async (queryParams: { page: number }) => {
       throw new Error('用户没有登录');
     }
 
-    // 发起 POST 请求，并将用户输入的查询条件作为请求体
     const response = await api.post('/user/Invoice_Inquiry', {
       页码: queryParams.page,
     }, {
@@ -36,10 +37,8 @@ const searchInvoices = async (queryParams: { page: number }) => {
       },
     });
 
-    // 返回成功响应
     return response.data;
   } catch (error) {
-    // 错误处理
     console.error('发票查询出错:', error);
     throw error; // 将错误抛出以便在调用处处理
   }
@@ -75,16 +74,14 @@ const parseInvoiceData = (data: any[]) => {
   });
 };
 
-// 加载调用
+// 页面加载时调用查询
 onMounted(async () => {
   try {
-    // 页面加载自动调用查询，页码为1
     const results = await searchInvoices({ page: 1 });
-    // 解析并赋值查询结果，保留 `null`
     invoiceData.value = parseInvoiceData(results.data);
-    console.log(invoiceData.value); // 打印结果用于调试
+    console.log(invoiceData.value);
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 });
 
@@ -96,17 +93,15 @@ const OCR = async (invoiceId: number) => {
       throw new Error("Token没有发现");
     }
 
-    // 发起 POST 请求，将发票ID发送给后端
     const response = await api.post('/ocr/OCR_server', {
-      发票ID: invoiceId, // 使用 invoiceId 作为字段名称，而不是发票ID
+      发票ID: invoiceId,
     }, {
       headers: {
-        Authorization: `Bearer ${token}`, // 将 token 添加到请求头中
+        Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
     });
 
-    // 弹窗提示
     if (response.data.status === 'success') {
       window.alert(`OCR处理成功：发票ID ${response.data.发票ID}`);
     } else {
@@ -120,62 +115,54 @@ const OCR = async (invoiceId: number) => {
 
 // 批量OCR识别
 const batchOCR = async () => {
-  // 过滤出发票号码为 null 的发票
   const invoicesForOCR = invoiceData.value.filter(invoice =>
     selectedInvoices.value.includes(invoice.id) && invoice.number === null
   );
 
   if (invoicesForOCR.length === 0) {
     window.alert('无法进行OCR识别：选中的发票中没有符合条件的发票');
-    return; // 阻止继续执行
+    return;
   }
 
-  // 创建一个数组用于存储所有OCR识别的Promise
   const ocrPromises = invoicesForOCR.map(invoice => OCR(invoice.id));
 
   try {
-    // 并发所有OCR请求，使用 Promise.allSettled 来获取请求状态
-    const 返回 = await Promise.allSettled(ocrPromises);
+    const results = await Promise.allSettled(ocrPromises);
 
-    // 处理每个OCR请求的结果
-    返回.forEach((返回, index) => {
-      if (返回.status === 'fulfilled') {
-        console.log(`OCR成功：发票ID ${invoicesForOCR[index].id}`, 返回.value);
+    results.forEach((result, index) => {
+      if (result.status === 'fulfilled') {
+        console.log(`OCR成功：发票ID ${invoicesForOCR[index].id}`, result.value);
       } else {
-        console.error(`OCR失败：发票ID ${invoicesForOCR[index].id}`, 返回.reason);
+        console.error(`OCR失败：发票ID ${invoicesForOCR[index].id}`, result.reason);
       }
     });
 
-    // 显示完成信息
     window.alert('OCR识别已完成');
-
-
   } catch (error) {
     console.error('批量OCR处理过程中出错：', error);
-    window.alert('批量OCR处理时发生错误，请联系管理员')
+    window.alert('批量OCR处理时发生错误，请联系管理员');
   }
-
 };
 
 // 全选或取消全选功能
 const toggleSelectAll = (event: Event) => {
   const checked = (event.target as HTMLInputElement).checked;
   if (checked) {
-    selectedInvoices.value = invoiceData.value.map(invoice => invoice.id); // 全选
+    selectedInvoices.value = invoiceData.value.map(invoice => invoice.id);
+
   } else {
-    selectedInvoices.value = []; // 全取消
+    selectedInvoices.value = [];
   }
 };
 
 // 删除发票 API 方法
-const del_invoice = async (invoiceID: number) => {
+const delInvoice = async (invoiceID: number) => {
   try {
     const token = getTokenFromCookie();
     if (!token) {
       throw new Error("用户未登录");
     }
 
-    // 发起 POST 请求，将发票 ID 发给后端
     const response = await api.post('/user/del_invoice', {
       ID: invoiceID,
     }, {
@@ -185,10 +172,6 @@ const del_invoice = async (invoiceID: number) => {
       },
     });
 
-    // 调试输出响应数据
-    console.log("删除响应", response.data);
-
-    // 删除弹窗
     if (response.data.code === 200) {
       console.log(`删除发票成功：${invoiceID}`);
       return response.data;
@@ -210,19 +193,101 @@ const 删除发票 = async () => {
     return;
   }
 
-  // 遍历选中发票ID
   for (const invoiceID of selectedInvoices.value) {
-    const 结果 = await del_invoice(invoiceID);
-    if (结果) {
-      // 删除成功即从本地删除该发票
+    const result = await delInvoice(invoiceID);
+    if (result) {
       invoiceData.value = invoiceData.value.filter(invoice => invoice.id !== invoiceID);
     }
   }
   window.alert(`选中的发票已删除 ${selectedInvoices.value}`);
-  // 清空选中的发票列表
   selectedInvoices.value = [];
+};
 
-}
+// 导出为Excel
+const exportToExcel = () => {
+  if (selectedInvoices.value.length === 0) {
+    window.alert('没有可以导出的发票数据');
+    return;
+  }
+
+  // 从 invoiceData 中找到选中的发票数据
+  const selectedInvoiceData = invoiceData.value
+    .filter(invoice => selectedInvoices.value.includes(invoice.id))
+    .map(invoice => ({
+      ID: invoice.id,
+      发票号码: invoice.number,
+      发票代码: invoice.code,
+      发票类型: invoice.type,
+      金额: invoice.amount,
+      日期: invoice.date,
+      内容: invoice.content,
+    }));
+
+  if (selectedInvoiceData.length === 0) {
+    window.alert('没有可以导出的发票数据');
+    return;
+  }
+
+  const worksheet = XLSX.utils.json_to_sheet(selectedInvoiceData);
+
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, "发票数据");
+
+  const data = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+  const blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+  const link = document.createElement('a');
+  link.href = window.URL.createObjectURL(blob);
+  link.download = '发票数据.xlsx';
+  link.click();
+};
+
+// 发票下载
+const invoiceDownload = async (): Promise<void> => {
+  // 从Cookie中获取token
+  const token = getTokenFromCookie();
+  if (!token) {
+    window.alert("用户未登录，无法下载发票");
+    return;
+  }
+
+  // 检查是否有选中的发票ID
+  if (selectedInvoices.value.length === 0) {
+    window.alert("请至少选择一个发票进行下载");
+    return;
+  }
+
+  try {
+    // 显示下载开始的提示
+    window.alert(`开始下载发票: ${selectedInvoices.value.join(', ')}`);
+
+    // 发票ID数组直接传递到API请求中，符合API要求的数组格式 [88, 89]
+    const response = await api.post('/user/DownZIP', selectedInvoices.value, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/zip', // 请求接收zip文件
+      },
+      responseType: 'blob', // 将响应类型设置为 blob 以便处理二进制数据
+    });
+
+    // 如果请求成功，处理下载文件
+    const blob = new Blob([response.data], { type: 'application/zip' });
+    const link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    link.download = 'invoices.zip'; // 设置下载文件名
+    link.click();
+
+    // 成功提示
+    window.alert("发票下载成功");
+    console.log(`下载发票成功：${selectedInvoices.value}`);
+  } catch (error) {
+    // 错误处理
+    console.error('下载发票出错：', error);
+    window.alert(`下载发票时发生错误, 错误信息: ${error.message}`);
+  }
+};
+
 
 </script>
 
@@ -242,6 +307,8 @@ const 删除发票 = async () => {
         <button class="search-button">查询</button>
         <button class="delete-button" @click="删除发票">批量删除</button>
         <button class="ocr-button" @click="batchOCR">批量OCR识别</button>
+        <button class="excel-button" @click="exportToExcel">导出Excel</button>
+        <button class="download-invoice" @click="invoiceDownload">下载发票</button>
       </div>
     </div>
 
@@ -288,4 +355,43 @@ const 删除发票 = async () => {
 @import url(../assets/findInvoice.css);
 
 /* 你可以根据需要调整CSS样式 */
+.excel-button {
+  background-color: #28a745; /* 绿色背景，表示成功/导出 */
+  color: white; /* 白色文字 */
+  padding: 10px 20px; /* 按钮内边距 */
+  border: none; /* 去除默认边框 */
+  border-radius: 5px; /* 圆角 */
+  font-size: 16px; /* 字体大小 */
+  font-weight: bold; /* 字体加粗 */
+  cursor: pointer; /* 鼠标悬停时变为手指 */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 按钮阴影 */
+  transition: background-color 0.3s, box-shadow 0.3s; /* 动画过渡 */
+}
+
+.excel-button:hover {
+  background-color: #218838; /* 鼠标悬停时背景变深 */
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* 悬停时加深阴影 */
+}
+
+.excel-button:active {
+  background-color: #1e7e34; /* 点击时背景变得更深 */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* 点击时阴影减小 */
+}
+
+
+.download-invoice {
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.download-invoice:hover {
+  background-color: #0056b3;
+}
+
 </style>
