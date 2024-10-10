@@ -19,14 +19,14 @@ async def ocr_api(表单: OCR表单, 请求: Request, credentials: HTTPAuthoriza
     验证 = 验证令牌(token)
     if not 验证:
         raise HTTPException(status_code=401, detail="Token 无效或过期")
+    else:
+        # 处理发票
+        try:
+            发票处理实例 = 发票处理(IP, 验证['sub'])
+            数据 = 发票处理实例.发票文件处理(表单.发票ID)
+            发票处理实例.发票数据存入数据库(数据, 表单.发票ID)
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"发票处理失败: {str(e)}")
 
-    # 处理发票
-    try:
-        发票处理实例 = 发票处理(IP, 验证['sub'])
-        数据 = 发票处理实例.发票文件处理(表单.发票ID)
-        发票处理实例.发票数据存入数据库(数据, 表单.发票ID)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"发票处理失败: {str(e)}")
-
-    # 返回成功响应到前端
-    return {"status": "success", "message": "OCR处理成功", "发票ID": 表单.发票ID}
+        # 返回成功响应到前端
+        return {"status": "success", "message": "OCR处理成功", "发票ID": 表单.发票ID}
