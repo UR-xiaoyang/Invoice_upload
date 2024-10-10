@@ -32,6 +32,7 @@ filelock==3.16.1
 fire==0.6.0
 fitz==0.0.1.dev2
 fonttools==4.54.1
+gunicorn==23.0.0
 h11 @ file:///croot/h11_1706652277403/work
 httpcore==1.0.5
 httplib2==0.22.0
