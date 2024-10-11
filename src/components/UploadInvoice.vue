@@ -50,6 +50,12 @@ const upload_invoice = async () => {
     // 获取token
     const token = Cookies.get('token') ?? '';
 
+    // 如果 token 不存在，提示用户未登录
+    if (!token) {
+      alert('未登录，请先登录后再上传发票');
+      return; // 直接返回，不执行后续请求
+    }
+
     // 添加token
     const config = {
       headers: {
@@ -70,6 +76,7 @@ const upload_invoice = async () => {
       alert('上传成功');
     } else {
       console.log("上传失败", 请求.data);
+
     }
   } catch (error) {
     console.log("上传失败", error);
