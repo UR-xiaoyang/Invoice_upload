@@ -85,6 +85,18 @@ onMounted(async () => {
   }
 });
 
+// OCR完成识别后调用
+const refreshInvoices = async () => {
+  try {
+    const results = await searchInvoices({ page: 1 });
+    invoiceData.value = parseInvoiceData(results.data);
+    console.log("发票数据已更新:", invoiceData.value);
+  } catch (error) {
+    console.error("重新请求发票数据时出错:", error);
+    window.alert("刷新发票数据时发生错误，请重试");
+  }
+};
+
 // OCR识别按钮API
 const OCR = async (invoiceId: number) => {
   try {
@@ -112,8 +124,6 @@ const OCR = async (invoiceId: number) => {
     window.alert('OCR 处理时发生错误。');
   }
 };
-
-// 批量OCR识别
 const batchOCR = async () => {
   const invoicesForOCR = invoiceData.value.filter(invoice =>
     selectedInvoices.value.includes(invoice.id) && invoice.number === null
@@ -138,11 +148,15 @@ const batchOCR = async () => {
     });
 
     window.alert('OCR识别已完成');
+
+    // OCR 完成后重新查询发票信息
+    await refreshInvoices();
   } catch (error) {
     console.error('批量OCR处理过程中出错：', error);
     window.alert('批量OCR处理时发生错误，请联系管理员');
   }
 };
+
 
 // 全选或取消全选功能
 const toggleSelectAll = (event: Event) => {
