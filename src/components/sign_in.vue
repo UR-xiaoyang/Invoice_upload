@@ -1,19 +1,20 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { api } from '@/API/API_connect'; // 确保api已配置了合适的超时时间
+import { api } from '@/API/API_connect'; // 确保 api 已配置了合适的超时时间
 import Cookies from 'js-cookie';
 
+// 路由器
 const router = useRouter();
 let isLoggedIn = ref(false);
 const username = ref('');
 const password = ref('');
 
-// 使用localStorage来持久化登录信息
+// 使用 localStorage 来持久化登录信息
 const storageKey = 'loginInfo';
 
+// 页面加载时，检查 localStorage 中是否有登录信息
 onMounted(() => {
-  // 页面加载时，检查localStorage中是否有登录信息
   const savedLoginInfo = localStorage.getItem(storageKey);
   if (savedLoginInfo) {
     const parsedInfo = JSON.parse(savedLoginInfo);
@@ -22,29 +23,38 @@ onMounted(() => {
   }
 });
 
+// 登录逻辑
 async function handleLogin() {
   try {
+    if (!username.value || !password.value) {
+      alert("用户名或密码不能为空");
+      return;
+    }
+
     const loginData = {
       用户名: username.value,
       密码: password.value,
     };
 
+    // 发起请求并设置超时
     const response = await Promise.race([
       api.post('/user/sign_in', loginData),
       new Promise((_, reject) => setTimeout(() => reject(new Error('请求超时')), 10000)), // 10秒超时
     ]);
 
+    // 登录成功处理
     if (response.status === 200) {
       console.log('登录成功:', response.data);
-      Cookies.set('token', response.data.access_token, { expires: 0.5 / 24 });
+      Cookies.set('token', response.data.access_token, { expires: 0.5 / 24 }); // 设置 token
       isLoggedIn.value = true;
-      // 保存登录信息到localStorage
+
+      // 保存登录信息到 localStorage
       localStorage.setItem(storageKey, JSON.stringify({
         isLoggedIn: true,
         username: response.data.username,
       }));
-      
-      window.location.href = '/';
+
+      window.location.href = '/'; // 登录成功后跳转主页
     } else {
       throw new Error('登录失败');
     }
@@ -59,6 +69,7 @@ async function handleLogin() {
   }
 }
 
+// 错误信息处理函数
 function getErrorMessage(error: any) {
   return error.response?.data?.message || error.message || '未知错误';
 }
