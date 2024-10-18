@@ -12,7 +12,7 @@ from 用户.发票.发票上传.发票上传API import 发票上传路由
 from 用户.发票.发票查询.发票查询API import 发票查询路由器
 from 用户.注册.注册API import 注册路由
 from 用户.登陆.登陆API import 登陆路由
-from 发票处理.OCR.OCR_API import OCR路由
+from 发票处理.数据识别.识别_API import 识别路由
 
 # 初始化
 配置 = 初始化()
@@ -32,7 +32,7 @@ app.include_router(注册路由, prefix="/user")
 app.include_router(登陆路由, prefix="/user")
 app.include_router(发票上传路由, prefix="/user")  # 修改前缀以避免冲突
 app.include_router(发票查询路由器, prefix="/user")  # 修改前缀以避免冲突
-app.include_router(OCR路由, prefix="/ocr")
+app.include_router(识别路由, prefix="/user")
 app.include_router(删除发票路由, prefix="/user")
 app.include_router(下载API, prefix="/user")
 

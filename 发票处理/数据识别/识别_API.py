@@ -1,17 +1,17 @@
 from fastapi import Request, Depends, HTTPException, APIRouter
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
-from 发票处理.OCR.OCR处理表单 import OCR表单
+from 发票处理.数据识别.识别表单 import 表单
 from 用户.登陆.登陆令牌 import 验证令牌
 
-from 发票处理.OCR.发票处理 import 发票处理
+from 发票处理.数据识别.发票处理 import 发票处理
 
-OCR路由 = APIRouter()
+识别路由 = APIRouter()
 security = HTTPBearer()
 
 
-@OCR路由.post("/OCR_server")
-async def ocr_api(表单: OCR表单, 请求: Request, credentials: HTTPAuthorizationCredentials = Depends(security)):
+@识别路由.post("/Identify_server")
+async def ocr_api(表单: 表单, 请求: Request, credentials: HTTPAuthorizationCredentials = Depends(security)):
     # 提取token
     token = credentials.credentials
     IP = 请求.client.host
@@ -23,7 +23,7 @@ async def ocr_api(表单: OCR表单, 请求: Request, credentials: HTTPAuthoriza
         # 处理发票
         try:
             发票处理实例 = 发票处理(IP, 验证['sub'])
-            数据 = 发票处理实例.发票文件处理(表单.发票ID)
+            数据 = 发票处理实例.发票文件处理(表单.发票ID, 表单.OCR)
             发票处理实例.发票数据存入数据库(数据, 表单.发票ID)
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"发票处理失败: {str(e)}")

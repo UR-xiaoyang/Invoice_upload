@@ -1,6 +1,7 @@
 from paddleocr import PaddleOCR
 
 class OCR_PaddleOCR:
+    @staticmethod
     def ocr_image(img_path):
         结果 = []
         # Paddleocr目前支持的多语言语种可以通过修改lang参数进行切换
@@ -12,7 +13,7 @@ class OCR_PaddleOCR:
             for line in res:
                 结果.append(line[1][0])
         return 结果
-
+    @staticmethod
     def ocr_pdf(pdf_path):
         结果 = []
         PAGE_NUM = 1  # 将识别页码前置作为全局，防止后续打开pdf的参数和前文识别参数不一致 / Set the recognition page number
@@ -23,8 +24,7 @@ class OCR_PaddleOCR:
 
         for idx in range(len(result)):
             res = result[idx]
-            if res == None:  # 识别到空页就跳过，防止程序报错 / Skip when empty result detected to avoid TypeError:NoneType
-
+            if res is None:  # 识别到空页就跳过，防止程序报错 / Skip when empty result detected to avoid TypeError:NoneType
                 continue
             for line in res:
                 结果.append(line[1][0])
