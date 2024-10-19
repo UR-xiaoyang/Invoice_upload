@@ -43,9 +43,8 @@
           </div>
           <div class="hidden md:flex items-center gap-4 w-full justify-between">
               <div class="flex items-center gap-4">
-                  <a class="hover:text-gray-300" href="/find_Invoice">
-                      查看发票
-                  </a>
+                  <router-link class="hover:text-gray-300" to="/find_Invoice">查看发票</router-link>
+
                   <router-link class="hover:text-gray-300" to="/">
                       上传文件
                   </router-link>
