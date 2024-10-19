@@ -1,157 +1,178 @@
-/* 基本页面布局 */
-.container {
-    min-height: 100vh;
-    padding: 20px;
-    background-color: #1f2937; /* 背景深灰色 */
-    color: white;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
+/* 设置页面的全局黑色背景 */
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #000000; /* 纯黑背景 */
+    color: #f0f0f0; /* 浅色字体 */
+    font-family: 'Arial', sans-serif;
+    overflow-x: hidden; /* 防止水平滚动条 */
 }
 
-/* 标题和搜索框 */
-.header {
+.bg {
+    width: 100%;
+    height: 100%;
+    background-color: #000000; /* 纯黑背景 */
+    color: #f0f0f0; /* 浅色字体 */
+}
+
+/* 页面容器设置为透明，且占满视口 */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
-    width: 100%;
-    max-width: 1200px;
-    margin-bottom: 20px;
+    justify-content: space-between;
+    background-color: transparent;
+}
+
+/* 标题和工具栏部分 */
+.header {
+    display: flex;
+    justify-content: space-between;
     align-items: center;
+    margin-bottom: 20px;
 }
 
 .title {
-    font-size: 2.2rem;
+    font-size: 32px;
     font-weight: bold;
-    background: linear-gradient(to right, #3b82f6, #9333ea); /* 蓝紫渐变 */
-    -webkit-background-clip: text;
-    color: transparent;
-    white-space: nowrap; /* 强制文字一行显示 */
-    margin-bottom: 20px;
+    color: #ffffff; /* 白色标题文字 */
+    margin: 0;
 }
 
-.search-area {
+/* 工具栏按钮 */
+.toolbar {
     display: flex;
     gap: 10px;
-    align-items: center;
-    width: 100%;
-    max-width: 1200px;
 }
 
-.search-input {
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #374151; /* 深灰边框 */
-    background-color: #111827; /* 深背景 */
-    color: white;
-    width: 300px;
-}
-
-.search-input::placeholder {
-    color: #6b7280; /* 灰色占位符 */
-}
-
-.search-button {
-    padding: 10px 20px;
-    background-color: #111827; /* 深色按钮背景 */
-    color: white;
+/* 按钮样式 */
+button {
+    padding: 12px 24px;
+    font-size: 16px;
     border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.search-button:hover {
-    background-color: #374151; /* 悬停时变亮 */
-}
-
-/* 分页功能美化 */
-.pagination {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.pagination-button {
-    background-color: #111827; /* 按钮背景 */
-    color: white;
-    border: none;
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.pagination-button:hover {
-    background-color: #374151; /* 悬停时变亮 */
-}
-
-.page-info {
-    color: #9ca3af; /* 灰色文本 */
-}
-
-/* 发票列表表格 */
-.invoice-list {
-    width: 100%;
-    max-width: 1200px;
-    margin-top: 20px;
     border-radius: 8px;
-    overflow: hidden; /* 去除表格的溢出部分 */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 添加阴影效果 */
+    cursor: pointer;
+    font-weight: bold;
+    transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s ease;
+    color: white;
 }
 
+/* 鼠标悬停和点击按钮效果 */
+button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 12px rgba(255, 255, 255, 0.2);
+}
+
+button:active {
+    transform: scale(0.98);
+    box-shadow: 0 4px 6px rgba(255, 255, 255, 0.1);
+}
+
+/* 各类按钮的颜色 */
+.excel-button {
+    background: linear-gradient(45deg, #28a745, #1e7e34);
+}
+
+.download-invoice {
+    background: linear-gradient(45deg, #007bff, #0056b3);
+}
+
+.quick-identify-button {
+    background: linear-gradient(45deg, #17a2b8, #138496);
+}
+
+.ocr-identify-button {
+    background: linear-gradient(45deg, #ffc107, #e0a800);
+    color: black;
+}
+
+.delete-button {
+    background: linear-gradient(45deg, #dc3545, #bd2130);
+}
+
+/* 表格样式 */
+.invoice-list {
+    margin-top: 20px;
+}
+
+/* 表格整体样式 */
 .invoice-table {
     width: 100%;
     border-collapse: collapse;
+    background-color: #1a1a1a; /* 较浅的黑色表格背景 */
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
+    color: #ffffff; /* 表格文字为白色 */
+    position: relative;
+    z-index: 1; /* 默认层级 */
 }
 
-.invoice-table th,
-.invoice-table td {
-    padding: 12px 15px;
+/* 表头样式 */
+.invoice-table thead tr {
+    background-color: #333333; /* 深灰色表头 */
+}
+
+.invoice-table th, .invoice-table td {
+    padding: 12px 20px;
     text-align: left;
-    border-bottom: 1px solid #374151; /* 行之间的分隔线 */
+    border-bottom: 1px solid #555; /* 边框颜色较淡 */
+    transition: background-color 0.3s, transform 0.2s;
 }
 
-.invoice-table thead {
-    background-color: #374151; /* 表头背景 */
-    color: #d1d5db; /* 浅灰色文字 */
-    text-transform: uppercase; /* 全部大写 */
-}
-
-.invoice-table tbody tr {
-    background-color: #1f2937; /* 行背景色 */
-    transition: background-color 0.3s;
-}
-
+/* 鼠标悬浮在某一行时，使其浮于其他内容之上 */
 .invoice-table tbody tr:hover {
-    background-color: #374151; /* 悬停时背景色 */
+    background-color: #2a2a2a; /* 悬停时背景颜色变浅 */
+    transform: scale(1.02); /* 轻微放大效果 */
+    z-index: 10; /* 提升层级，浮于其他表格上方 */
+    position: relative; /* 使 z-index 生效 */
+    box-shadow: 0 8px 16px rgba(255, 255, 255, 0.2); /* 添加悬停时的阴影 */
 }
 
-/* 美化 OCR 和删除按钮 */
-.ocr-button,
-.delete-button {
-    padding: 5px 15px;
-    border: none;
-    border-radius: 5px;
+/* 空数据提示样式 */
+.invoice-list:empty::before {
+    content: "没有找到发票数据";
+    display: block;
+    text-align: center;
+    padding: 20px;
+    color: #888;
+    font-size: 18px;
+}
+
+/* 表头复选框和行复选框 */
+.invoice-table input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
     cursor: pointer;
-    color: white;
-    font-size: 0.9rem;
-    transition: background-color 0.3s;
 }
 
-.ocr-button {
-    background-color: #3b82f6; /* 蓝色背景 */
-    margin-right: 10px; /* 增加按钮之间的间距 */
+/* 当表头复选框选中时高亮所有选中的行 */
+.invoice-table input[type="checkbox"]:checked + tr {
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
-.ocr-button:hover {
-    background-color: #2563eb; /* 悬停时变深 */
+/* 按钮的脉冲动画 */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+    }
 }
 
-.delete-button {
-    background-color: #ef4444; /* 红色背景 */
-}
-
-.delete-button:hover {
-    background-color: #dc2626; /* 悬停时变深 */
+.quick-identify-button:hover,
+.ocr-identify-button:hover {
+    animation: pulse 1s infinite;
 }

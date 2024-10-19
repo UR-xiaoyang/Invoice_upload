@@ -98,15 +98,16 @@ const refreshInvoices = async () => {
 };
 
 // OCR识别按钮API
-const OCR = async (invoiceId: number) => {
+const Identify_server = async (invoiceId: number, isOCR: boolean) => {
   try {
     const token = getTokenFromCookie();
     if (!token) {
-      throw new Error("Token没有发现");
+      throw new Error('Token没有发现');
     }
 
-    const response = await api.post('/ocr/OCR_server', {
+    const response = await api.post('/user/Identify_server', {
       发票ID: invoiceId,
+      OCR: isOCR, // 添加 OCR 参数
     }, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -115,48 +116,65 @@ const OCR = async (invoiceId: number) => {
     });
 
     if (response.data.status === 'success') {
-      window.alert(`OCR处理成功：发票ID ${response.data.发票ID}`);
+      window.alert(`识别成功：发票ID ${response.data.发票ID}`);
     } else {
-      window.alert(`OCR处理失败：${response.data.message}`);
+      window.alert(`识别失败：${response.data.message}`);
     }
   } catch (error) {
-    console.error('OCR 处理出错：', error);
-    window.alert('OCR 处理时发生错误。');
+    console.error('识别出错：', error);
+    window.alert('识别时发生错误。');
   }
 };
-const batchOCR = async () => {
+
+
+const Identify = async (isOCR: boolean) => {
+  // 筛选出符合条件的发票
   const invoicesForOCR = invoiceData.value.filter(invoice =>
     selectedInvoices.value.includes(invoice.id) && invoice.number === null
   );
 
   if (invoicesForOCR.length === 0) {
-    window.alert('无法进行OCR识别：选中的发票中没有符合条件的发票');
+    window.alert('无法进行识别：选中的发票中没有符合条件的发票');
     return;
   }
 
-  const ocrPromises = invoicesForOCR.map(invoice => OCR(invoice.id));
+  // 收集所有 OCR 请求的 Promise，传递 OCR 参数
+  const ocrPromises = invoicesForOCR.map(invoice =>
+    Identify_server(invoice.id, isOCR)
+  );
 
   try {
     const results = await Promise.allSettled(ocrPromises);
 
+    const successInvoices = [];
+    const failedInvoices = [];
+
     results.forEach((result, index) => {
       if (result.status === 'fulfilled') {
-        console.log(`OCR成功：发票ID ${invoicesForOCR[index].id}`, result.value);
+        successInvoices.push(invoicesForOCR[index].id);
+        console.log(`识别成功：发票ID ${invoicesForOCR[index].id}`, result.value);
       } else {
-        console.error(`OCR失败：发票ID ${invoicesForOCR[index].id}`, result.reason);
+        failedInvoices.push(invoicesForOCR[index].id);
+        console.error(`识别失败：发票ID ${invoicesForOCR[index].id}`, result.reason);
       }
     });
 
-    window.alert('OCR识别已完成');
+    let alertMessage = `识别已完成。\n`;
+    if (successInvoices.length > 0) {
+      alertMessage += `成功的发票ID：${successInvoices.join(', ')}\n`;
+    }
+    if (failedInvoices.length > 0) {
+      alertMessage += `失败的发票ID：${failedInvoices.join(', ')}\n请重试。`;
+    }
 
-    // OCR 完成后重新查询发票信息
-    await refreshInvoices();
+    window.alert(alertMessage);
+
+    await refreshInvoices(); // 刷新发票数据
   } catch (error) {
-    console.error('批量OCR处理过程中出错：', error);
-    window.alert('批量OCR处理时发生错误，请联系管理员');
+    console.error('批量识别过程中出错：', error);
+    window.alert('批量识别时发生错误，请联系管理员');
   }
 };
-
 
 // 全选或取消全选功能
 const toggleSelectAll = (event: Event) => {
@@ -302,110 +320,67 @@ const invoiceDownload = async (): Promise<void> => {
   }
 };
 
-
+//
 </script>
 
 <template>
-  <div class="container">
-    <!-- 标题和工具栏 -->
-    <div class="header">
-      <h1 class="title">发票查询</h1>
-      <!-- 工具栏 -->
-      <div class="toolbar">
-        <input
-          class="search-input"
-          id="invoiceSearch"
-          placeholder="请输入发票号码、发票代码、发票金额或上传日期"
-          type="text"
-        />
-        <button class="search-button">查询</button>
-        <button class="delete-button" @click="删除发票">批量删除</button>
-        <button class="ocr-button" @click="batchOCR">批量OCR识别</button>
-        <button class="excel-button" @click="exportToExcel">导出Excel</button>
-        <button class="download-invoice" @click="invoiceDownload">下载发票</button>
-      </div>
-    </div>
+  <div class="bg">
+    <div class="container">
+      <!-- 标题和工具栏 -->
+      <div class="header">
+        <h1 class="title">发票管理</h1>
+        <!-- 工具栏 -->
+        <div class="toolbar">
 
-    <!-- 发票信息列表 -->
-    <div class="invoice-list">
-      <table class="invoice-table" v-if="invoiceData.length > 0">
-        <thead>
-        <tr>
-          <th>
-            <!-- 表头复选框点击全选/取消全选 -->
-            <input type="checkbox" @change="toggleSelectAll" />
-          </th>
-          <th>ID</th>
-          <th>发票号码</th>
-          <th>发票代码</th>
-          <th>发票类型</th>
-          <th>金额</th>
-          <th>日期</th>
-          <th>内容</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr v-for="invoice in invoiceData" :key="invoice.id">
-          <td>
-            <!-- 每个发票记录前面的复选框 -->
-            <input type="checkbox" v-model="selectedInvoices" :value="invoice.id" />
-          </td>
-          <td>{{ invoice.id }}</td>
-          <td>{{ invoice.number }}</td>
-          <td>{{ invoice.code }}</td>
-          <td>{{ invoice.type }}</td>
-          <td>{{ invoice.amount }}</td>
-          <td>{{ invoice.date }}</td>
-          <td>{{ invoice.content }}</td>
-        </tr>
-        <!-- 更多发票信息行 -->
-        </tbody>
-      </table>
+          <button class="delete-button" @click="删除发票">批量删除</button>
+          <button class="quick-identify-button" @click="Identify(false)">快速识别</button>
+          <button class="ocr-identify-button" @click="Identify(true)">OCR识别</button>
+          <button class="excel-button" @click="exportToExcel">导出Excel</button>
+          <button class="download-invoice" @click="invoiceDownload">下载发票</button>
+        </div>
+      </div>
+
+      <!-- 发票信息列表 -->
+      <div class="invoice-list">
+        <table class="invoice-table" v-if="invoiceData.length > 0">
+          <thead>
+          <tr>
+            <th>
+              <!-- 表头复选框点击全选/取消全选 -->
+              <input type="checkbox" @change="toggleSelectAll" />
+            </th>
+            <th>ID</th>
+            <th>发票号码</th>
+            <th>发票代码</th>
+            <th>发票类型</th>
+            <th>金额</th>
+            <th>日期</th>
+            <th>内容</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for="invoice in invoiceData" :key="invoice.id">
+            <td>
+              <!-- 每个发票记录前面的复选框 -->
+              <input type="checkbox" v-model="selectedInvoices" :value="invoice.id" />
+            </td>
+            <td>{{ invoice.id }}</td>
+            <td>{{ invoice.number }}</td>
+            <td>{{ invoice.code }}</td>
+            <td>{{ invoice.type }}</td>
+            <td>{{ invoice.amount }}</td>
+            <td>{{ invoice.date }}</td>
+            <td>{{ invoice.content }}</td>
+          </tr>
+          <!-- 更多发票信息行 -->
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
 @import url(../assets/findInvoice.css);
-
-/* 你可以根据需要调整CSS样式 */
-.excel-button {
-  background-color: #28a745; /* 绿色背景，表示成功/导出 */
-  color: white; /* 白色文字 */
-  padding: 10px 20px; /* 按钮内边距 */
-  border: none; /* 去除默认边框 */
-  border-radius: 5px; /* 圆角 */
-  font-size: 16px; /* 字体大小 */
-  font-weight: bold; /* 字体加粗 */
-  cursor: pointer; /* 鼠标悬停时变为手指 */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 按钮阴影 */
-  transition: background-color 0.3s, box-shadow 0.3s; /* 动画过渡 */
-}
-
-.excel-button:hover {
-  background-color: #218838; /* 鼠标悬停时背景变深 */
-  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* 悬停时加深阴影 */
-}
-
-.excel-button:active {
-  background-color: #1e7e34; /* 点击时背景变得更深 */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* 点击时阴影减小 */
-}
-
-
-.download-invoice {
-  padding: 10px 20px;
-  font-size: 16px;
-  color: #fff;
-  background-color: #007bff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.download-invoice:hover {
-  background-color: #0056b3;
-}
 
 </style>
