@@ -25,8 +25,9 @@ async def ocr_api(表单: 表单, 请求: Request, credentials: HTTPAuthorizatio
             发票处理实例 = 发票处理(IP, 验证['sub'])
             数据 = 发票处理实例.发票文件处理(表单.发票ID, 表单.OCR)
             发票处理实例.发票数据存入数据库(数据, 表单.发票ID)
+            # 返回成功响应到前端
+            return {"status": "success", "message": "OCR处理成功", "发票ID": 表单.发票ID}
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"发票处理失败: {str(e)}")
 
-        # 返回成功响应到前端
-        return {"status": "success", "message": "OCR处理成功", "发票ID": 表单.发票ID}
+
