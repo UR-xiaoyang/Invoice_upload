@@ -22,17 +22,9 @@ class 发票处理:
             读取结果 = 实例化发票.读取器()
             识别结果 = 读取结果.split("\n\n")
         elif use_OCR == True and ".pdf" in 查询的数据[0][4]:
-            try:
-                识别结果 = OCR_PaddleOCR.ocr_pdf(f"data_upload_invoice/{查询的数据[0][4]}")
-            except:
-                print("警告：未检测到OCR,无法进行OCR识别")
-                return None
+            识别结果 = OCR_PaddleOCR.ocr_pdf(f"data_upload_invoice/{查询的数据[0][4]}")
         else:
-            try:
-                识别结果 = OCR_PaddleOCR.ocr_image(f"data_upload_invoice/{查询的数据[0][4]}")
-            except:
-                print("警告：未检测到OCR,无法进行OCR识别")
-                return None
+            识别结果 = OCR_PaddleOCR.ocr_image(f"data_upload_invoice/{查询的数据[0][4]}")
         发票结果 = Arrange_invoice.get_invoice_info(识别结果)
 
         return 发票结果
