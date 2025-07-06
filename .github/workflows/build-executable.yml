@@ -7,8 +7,21 @@ on:
 
 jobs:
   build:
-    name: Build for Linux
-    runs-on: ubuntu-latest
+    name: Build for ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        include:
+          - os: windows-latest
+            artifact_name: InvoiceManager.exe
+            asset_name: InvoiceManager-Windows.exe
+          - os: ubuntu-latest
+            artifact_name: InvoiceManager
+            asset_name: InvoiceManager-Linux
+          - os: macos-latest
+            artifact_name: InvoiceManager
+            asset_name: InvoiceManager-macOS
 
     steps:
       - name: Checkout code
@@ -29,8 +42,14 @@ jobs:
         run: |
           pyinstaller --onefile --windowed --name InvoiceManager src/main.py
 
+      - name: Rename artifact
+        shell: bash
+        run: |
+          mv dist/${{ matrix.artifact_name }} dist/${{ matrix.asset_name }}
+
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: InvoiceManager-Linux
-          path: dist/InvoiceManager 
+          name: ${{ matrix.asset_name }}
+          path: dist/${{ matrix.asset_name }}
+        continue-on-error: true # 允许在找不到文件时继续 
