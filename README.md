@@ -1,103 +1,85 @@
-# 发票管理系统
+# invoice management system
 
-一个基于 PySide6 的现代化发票管理应用程序。
+A modern invoice management application based on PySide6.
 
-## 功能特性
+## Features
 
-### ✅ 已完成功能
-- 🎨 **现代化UI设计** - 采用最新设计语言，美观大方
-- 🔍 **智能搜索筛选** - 支持关键词搜索、状态筛选、日期范围筛选
-- ⚡ **快速筛选** - 今天、本周、本月、本季度快速筛选
-- 📋 **现代化表格** - 带状态指示器、排序、统计信息的表格
-- 📊 **实时统计** - 状态统计、金额统计、记录计数
-- 🎯 **智能按钮** - 根据选择状态智能启用/禁用操作按钮
-- ⏰ **实时时间** - 状态栏显示当前时间
-- 🔄 **数据刷新** - 支持手动刷新数据
-- 💫 **交互动画** - 现代化的悬停和点击效果
-- 🎛️ **侧栏导航菜单** - 现代化侧栏，支持展开/收起，包含主要功能导航
+- **Modern UI Design**: Sleek and user-friendly interface.
+- **Multi-User Management**: Supports adding, deleting, and renaming users, with invoices managed on a per-user basis.
+- **Invoice Management**: Full CRUD (Create, Read, Update, Delete) operations for invoices.
+- **File Caching**: Original invoice files (PDF, images) are cached for easy access.
+- **Batch Scanning**: Supports batch OCR scanning of multiple invoice files.
+- **OCR Integration**: Extracts data from invoices using OCR services.
+- **PDF Text Extraction**: Extracts text directly from PDF files.
+- **Interactive Table**: Modern table view for displaying invoices with sorting and status indicators.
+- **Dynamic Buttons**: Action buttons are intelligently enabled/disabled based on selections.
+- **Sidebar Navigation**: Modern collapsible sidebar for user selection.
+- **Data Persistence**: Invoice data is saved locally in a `invoices.json` file.
 
-### 🔄 开发中功能
-- 💾 数据库存储（SQLite集成）
-- ➕ 发票详细信息管理（添加/编辑对话框）
-- 📤 数据导出功能（Excel/CSV/PDF）
-- 🔐 用户权限管理
-- 📈 数据分析报表
+## Installation and Running
 
-## 安装和运行
-
-### 方法一：使用启动脚本（推荐）
-
+### Method 1: Use the startup script (recommended)
 ```bash
 ./run.sh
 ```
 
-### 方法二：手动运行
+### Method 2: Manual execution
 
-1. 激活虚拟环境：
-```bash
-source .venv/bin/activate
-```
+1. **Create and activate a virtual environment**:
+    ```bash
+    python -m venv .venv
+    source .venv/bin/activate
+    ```
 
-2. 运行程序：
-```bash
-cd src
-python main.py
-```
+2. **Install dependencies**:
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-## 项目结构
+3. **Run the application**:
+    ```bash
+    python src/main.py
+    ```
+
+## Project structure
 
 ```
 Invoice_upload/
-├── src/                    # 源代码目录
-│   ├── components/         # UI组件模块
-│   │   ├── __init__.py
-│   │   ├── search_widget.py    # 搜索组件
-│   │   ├── table_widget.py     # 表格组件
-│   │   ├── button_widget.py    # 按钮组件
-│   │   └── sidebar_widget.py   # 侧栏导航组件
-│   ├── styles/             # 样式管理模块
-│   │   ├── __init__.py
-│   │   └── styles.py       # 样式定义
-│   ├── main_window.py      # 主窗口类
-│   └── main.py            # 主程序入口
-├── .venv/                 # Python虚拟环境
-├── requirements.txt       # 项目依赖
-├── run.sh                # 启动脚本
-├── TODO.md               # 开发计划
-└── README.md             # 项目说明
+├── cache/                  # Directory for cached invoice source files
+├── src/                    # Source code directory
+│   ├── components/         # UI component modules
+│   │   ├── button_widget.py    # Bottom action buttons
+│   │   ├── invoice_dialog.py   # Dialog for adding/editing invoices
+│   │   ├── progress_dialog.py  # Progress dialog for batch operations
+│   │   ├── sidebar_widget.py   # Left sidebar for user management
+│   │   └── table_widget.py     # Main invoice display table
+│   ├── services/           # Backend services
+│   │   ├── ocr_service.py      # OCR processing service
+│   │   ├── pdf_text_service.py # PDF text extraction service
+│   │   └── verification_service.py # Invoice verification service
+│   ├── styles/             # Style management module
+│   │   └── styles.py       # Style definitions
+│   ├── data_manager.py     # Data persistence and management
+│   ├── main_window.py      # Main window class
+│   └── main.py             # Main application entry point
+├── invoices.json           # Data storage file
+├── requirements.txt        # Project dependencies
+├── run.sh                  # Startup script
+├── TODO.md                 # Development plan
+└── README.md               # Project description
 ```
 
-## 侧栏导航菜单
+## Development Progress
 
-### 主要功能
-- **📊 仪表盘** - 数据统计概览和图表分析
-- **📋 发票管理** - 发票记录的增删改查
-- **🔍 搜索查询** - 快速搜索和高级筛选
-- **📈 报表分析** - 各类统计报表和数据分析
-- **🏢 供应商管理** - 供应商信息和合作记录管理
+Please refer to the `TODO.md` file for a detailed development plan and progress.
 
-### 快速工具
-- **📥 批量导入** - 支持Excel/CSV文件批量导入
-- **📤 数据导出** - 导出各种格式的数据文件
-- **💾 数据备份** - 系统数据备份和恢复
-- **⚙️ 系统设置** - 界面主题、数据库配置等
-
-### 特色功能
-- **🔄 展开/收起** - 点击切换按钮可展开或收起侧栏
-- **🎯 智能选择** - 菜单项支持单选模式，清晰显示当前位置
-- **👤 用户信息** - 底部显示当前用户信息
-- **🎨 现代化设计** - 采用现代化配色和图标设计
-
-## 开发进度
-
-请查看 `TODO.md` 文件了解详细的开发计划和进度。
-
-## 系统要求
+## System Requirements
 
 - Python 3.7+
 - PySide6
+- Dependencies listed in `requirements.txt`
 - Linux/Windows/macOS
 
-## 贡献
+## Contribution
 
-欢迎提交问题和功能请求！ 
+Welcome to submit issues and feature requests! 

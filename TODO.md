@@ -1,11 +1,23 @@
-# 发票管理软件开发计划
+# Invoice Management Software Development Plan
 
-- [x] **项目初始化**: 创建项目结构，设置虚拟环境并安装PySide6。
-- [x] **主窗口UI设计**: 使用PySide创建一个包含表格、按钮和搜索栏的主窗口。
-- [ ] **数据存储**: 设计发票数据模型，并使用SQLite建立数据库来存储发票信息。
-- [ ] **添加发票功能**: 创建一个对话框用于输入新的发票信息，并将其保存到数据库中。
-- [ ] **显示发票功能**: 从数据库读取发票数据，并在主窗口的表格中展示出来。
-- [ ] **编辑发票功能**: 允许用户修改选定的发票信息。
-- [ ] **删除发票功能**: 允许用户删除选定的发票。
-- [ ] **搜索发票功能**: 实现通过关键字搜索和筛选发票的功能。
-- [ ] **打包应用程序**: 使用PyInstaller等工具将应用打包成可执行文件。
+## Version 1.0 (Current)
+- [x] **Project Initialization**: Created project structure, set up virtual environment, and installed PySide6.
+- [x] **Main Window UI Design**: Implemented a modern main window with a collapsible sidebar, invoice table, and action buttons.
+- [x] **Data Persistence (JSON)**: Designed an invoice data model and used a JSON file (`invoices.json`) for data storage.
+- [x] **Multi-User Management**: Implemented features to add, delete, and rename users.
+- [x] **Add/Edit Invoice**: Created a dialog for inputting and modifying invoice information, and saving it to the JSON file.
+- [x] **Display Invoices**: Read invoice data from the JSON file and displayed it in the main window's table.
+- [x] **Delete Invoice**: Allowed users to delete selected invoices.
+- [x] **File Caching**: Implemented caching for original invoice source files.
+- [x] **Batch OCR/PDF Scanning**: Implemented asynchronous batch processing for invoices.
+
+## Future Development
+- [ ] **Database Integration**: Migrate data storage from JSON to a more robust database system like SQLite or PostgreSQL.
+- [ ] **Advanced Search and Filtering**: Implement keyword search and filtering by status, date range, etc.
+- [ ] **Data Export**: Add functionality to export invoice data to formats like Excel, CSV, or PDF.
+- [ ] **Dashboard and Analytics**: Create a dashboard to display statistics and analytical charts.
+- [ ] **User Authentication**: Introduce a login system and user permission management.
+- [ ] **Application Packaging**: Package the application into a standalone executable file using tools like PyInstaller.
+- [ ] **Enhanced Error Handling and Logging**: Improve error handling throughout the application and add a comprehensive logging mechanism.
+- [ ] **Unit and Integration Testing**: Write tests to ensure code quality and stability.
+- [ ] **CI/CD Pipeline**: Set up a continuous integration and deployment pipeline.
