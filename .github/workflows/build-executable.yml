@@ -7,21 +7,32 @@ on:
 
 jobs:
   build:
-    name: Build for ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
+    name: Build for ${{ matrix.os_name }} (${{ matrix.arch }})
+    runs-on: ${{ matrix.runner }}
     strategy:
+      fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
         include:
-          - os: windows-latest
-            artifact_name: InvoiceManager.exe
-            asset_name: InvoiceManager-Windows.exe
-          - os: ubuntu-latest
-            artifact_name: InvoiceManager
-            asset_name: InvoiceManager-Linux
-          - os: macos-latest
-            artifact_name: InvoiceManager
-            asset_name: InvoiceManager-macOS
+          - runner: windows-latest
+            os_name: Windows
+            arch: x86_64
+            asset_name: InvoiceManager-Windows-x86_64.exe
+            pyinstaller_artifact_name: InvoiceManager.exe
+          - runner: ubuntu-latest
+            os_name: Linux
+            arch: x86_64
+            asset_name: InvoiceManager-Linux-x86_64
+            pyinstaller_artifact_name: InvoiceManager
+          - runner: macos-13
+            os_name: macOS
+            arch: x86_64
+            asset_name: InvoiceManager-macOS-x86_64
+            pyinstaller_artifact_name: InvoiceManager
+          - runner: macos-14
+            os_name: macOS
+            arch: ARM64
+            asset_name: InvoiceManager-macOS-ARM64
+            pyinstaller_artifact_name: InvoiceManager
 
     steps:
       - name: Checkout code
@@ -45,11 +56,10 @@ jobs:
       - name: Rename artifact
         shell: bash
         run: |
-          mv dist/${{ matrix.artifact_name }} dist/${{ matrix.asset_name }}
+          mv dist/${{ matrix.pyinstaller_artifact_name }} dist/${{ matrix.asset_name }}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.asset_name }}
-          path: dist/${{ matrix.asset_name }}
-        continue-on-error: true # 允许在找不到文件时继续 
+          path: dist/${{ matrix.asset_name }} 
